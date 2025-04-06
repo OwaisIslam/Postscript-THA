@@ -25,7 +25,7 @@ fetch(apiURL, getOptions)
                 <td>${moment(res.subscribers[i].created_at).format('MM/DD/YYYY')}</td>
                 <td>${res.subscribers[i].tags.join(', ')}</td>
                 <td><input type="text" class="form-control" placeholder="Add Tag"></td>
-                <td><button class="btn btn-primary">Add Tag</button></td>
+                <td><button class="btn btn-primary">Submit</button></td>
             `;
             tableBody.appendChild(row);
         }
