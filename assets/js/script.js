@@ -2,6 +2,8 @@ localStorage.clear();
 
 var apiURL = "https://api.postscript.io/api/v2/subscribers";
 
+const subscribers = [];
+
 const getOptions = {
     method: 'GET',
     headers: {
