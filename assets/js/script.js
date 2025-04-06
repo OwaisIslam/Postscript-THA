@@ -1,7 +1,5 @@
 localStorage.clear();
 
-let correctRow = false;
-
 var apiURL = "https://api.postscript.io/api/v2/subscribers";
 
 const getOptions = {
@@ -31,13 +29,6 @@ fetch(apiURL, getOptions)
             `;
             tableBody.appendChild(row);
         }
-        
-        // Set the id of the table body and each row
-        tableBody.id = "subsTable";
-        var rows = document.getElementById("subsTable").rows;
-        for (let i = 0; i < rows.length; i++){
-            rows[i].id = "addTagText" + (i+1);
-        }
     })
 
 
@@ -53,12 +44,8 @@ $(document).on('click', 'button', function() {
         .then(res => res.json())
         .then(function(res) {
             for (let i = 0; i < res.subscribers.length; i++) {
-                console.log("in for");
-                if (res.subscribers[i].phone_number == row.find('.phoneNum').text()) {
-                    console.log("in if");
-                    // Add the tag to the subscriber
-                    res.subscribers[i].tags.push(tag);
 
+                if (res.subscribers[i].phone_number == row.find('.phoneNum').text()) {
                     subID = res.subscribers[i].id;
 
                     const patchOptions = {
@@ -78,22 +65,13 @@ $(document).on('click', 'button', function() {
                     fetch(apiURL + "/" + subID, patchOptions)
                         .then(res => res.json())
                         .then(function(res) {
-                            correctRow = true;
-                            console.log("correctRow in fetch: " + correctRow);
-                            if (correctRow) {
-                                alert("Tag added successfully!");
-                            } else {
-                                alert("Tag was not added as corresponding 'Add Tag' button in the row must be clicked!");
-                            }
-                            //location.reload();                          
+                            location.reload();                          
                         })
                         .catch(err => console.error(err));
 
                     i = res.subscribers.length;
                 }
             }
-        })
+    })
         .catch(err => console.error(err));
-
-        console.log("final correctRow: " + correctRow);
 });
