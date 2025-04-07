@@ -19,25 +19,52 @@ const endIndex = startIndex + itemsPerPage;
 const paginatedItems = subsList.slice(startIndex, endIndex);
 const pageNumbers = [];
 const pageList = document.querySelector('.pagination');
+//const prevButton =
 //const pageCount = Math.ceil(subsList.length / itemsPerPage);
-const pageCount = 5;
-console.log ("pageCount: " + pageCount);
+//const pageCount = 5;
+//console.log ("pageCount: " + pageCount);
 
 const prevPage = () => {
+    const pageCount = Math.ceil(subsList.length / itemsPerPage);
+
+    if (currentPage == pageCount) {
+        $("#next-li")[0].classList.remove('disabled');
+    } else if (currentPage == 1) {
+        $("#prev-li")[0].classList.remove('disabled');
+    }
+    
     if (currentPage > 1) {
+        $("#prev-li")[0].classList.remove('disabled');
         currentPage--;
         updateTable();
+    } else {
+        $("#prev-li")[0].classList.add('disabled');
     }
+
+
 }
+
 const nextPage = () => {
-    console.log("in nextPage");
+    const pageCount = Math.ceil(subsList.length / itemsPerPage);
+
+    if (currentPage == pageCount) {
+        $("#next-li")[0].classList.remove('disabled');
+    } else if (currentPage == 1) {
+        $("#prev-li")[0].classList.remove('disabled');
+    }
+
     if (currentPage < pageCount) {
         currentPage++;
         updateTable();
+    } else {
+        $("#next-li")[0].classList.add('disabled');
     }
 }
+
+
 const updateTable = () => {
     console.log("in updateTable");
+    const pageCount = Math.ceil(subsList.length / itemsPerPage);
     const tableBody = document.querySelector('tbody');
     tableBody.innerHTML = '';
     const startIndex = (currentPage - 1) * itemsPerPage;
@@ -56,9 +83,18 @@ const updateTable = () => {
         tableBody.appendChild(row);
     });
 }
+
+const checkPage = () => {
+    const pageCount = Math.ceil(subsList.length / itemsPerPage);
+    if (currentPage == pageCount) {
+        $("#next-li")[0].classList.add('disabled');
+    } else if (currentPage == 1) {
+        $("#prev-li")[0].classList.add('disabled');
+    }
+}
 const totalPages = Math.ceil(subsList.length / itemsPerPage);
 
-function displayData() {
+const displayData = () =>{
     const tableBody = document.querySelector('tbody');
     tableBody.innerHTML = '';
     for (let i = startIndex; i < endIndex && i < subsList.length; i++) {
@@ -158,12 +194,12 @@ $(document).on('click', 'button', function() {
         .catch(err => console.error(err));
 });
 
-$("a[id*='prev-page']").click(function() {
+$("a[id~='prev-page']").click(function() {
     prevPage();
     console.log("prev-page");
 });
 
-$("a[id*='next-page']").click(function() {
+$("a[id~='next-page']").click(function() {
     nextPage();
     console.log("next-page");
 });
