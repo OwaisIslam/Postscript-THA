@@ -18,7 +18,6 @@ const startIndex = (currentPage - 1) * itemsPerPage;
 const endIndex = startIndex + itemsPerPage;
 const paginatedItems = subsList.slice(startIndex, endIndex);
 const pageNumbers = [];
-//const pageList = document.querySelector('.pagination');
 const pageList = $(".pagination");
 
 const prevPage = () => {
@@ -49,7 +48,6 @@ const nextPage = () => {
 }
 
 const updateTable = () => {
-    console.log("in updateTable");
     const pageCount = Math.ceil(subsList.length / itemsPerPage);
     const tableBody = document.querySelector('tbody');
     tableBody.innerHTML = '';
@@ -121,20 +119,6 @@ fetch(apiURL, getOptions)
         }
 
         updateTable();
-
-        // Loop through the subscribers and log their details
-        /*for (let i = 0; i < numberOfSubs; i++) {
-            const row = document.createElement('tr');
-            row.innerHTML = `
-                <th scope="row" class="phoneNum">${res.subscribers[i].phone_number}</th>
-                <td>${res.subscribers[i].email}</td>
-                <td>${moment(res.subscribers[i].created_at).format('MM/DD/YYYY')}</td>
-                <td>${res.subscribers[i].tags.join(', ')}</td>
-                <td><input type="text" class="form-control" placeholder="Add Tag"></td>
-                <td><button class="btn btn-primary">Submit</button></td>
-            `;
-            tableBody.appendChild(row);
-        }*/
     })
 
 
