@@ -18,20 +18,13 @@ const startIndex = (currentPage - 1) * itemsPerPage;
 const endIndex = startIndex + itemsPerPage;
 const paginatedItems = subsList.slice(startIndex, endIndex);
 const pageNumbers = [];
-const pageList = document.querySelector('.pagination');
-//const prevButton =
-//const pageCount = Math.ceil(subsList.length / itemsPerPage);
-//const pageCount = 5;
-//console.log ("pageCount: " + pageCount);
+//const pageList = document.querySelector('.pagination');
+const pageList = $(".pagination");
 
 const prevPage = () => {
     const pageCount = Math.ceil(subsList.length / itemsPerPage);
 
-    if (currentPage == pageCount) {
-        $("#next-li")[0].classList.remove('disabled');
-    } else if (currentPage == 1) {
-        $("#prev-li")[0].classList.remove('disabled');
-    }
+    checkPage();
     
     if (currentPage > 1) {
         $("#prev-li")[0].classList.remove('disabled');
@@ -40,18 +33,12 @@ const prevPage = () => {
     } else {
         $("#prev-li")[0].classList.add('disabled');
     }
-
-
 }
 
 const nextPage = () => {
     const pageCount = Math.ceil(subsList.length / itemsPerPage);
 
-    if (currentPage == pageCount) {
-        $("#next-li")[0].classList.remove('disabled');
-    } else if (currentPage == 1) {
-        $("#prev-li")[0].classList.remove('disabled');
-    }
+    checkPage();
 
     if (currentPage < pageCount) {
         currentPage++;
@@ -60,7 +47,6 @@ const nextPage = () => {
         $("#next-li")[0].classList.add('disabled');
     }
 }
-
 
 const updateTable = () => {
     console.log("in updateTable");
@@ -82,16 +68,19 @@ const updateTable = () => {
         `;
         tableBody.appendChild(row);
     });
+
+    $('#current-page').text("On Page " + currentPage + " of " + pageCount);
 }
 
 const checkPage = () => {
     const pageCount = Math.ceil(subsList.length / itemsPerPage);
     if (currentPage == pageCount) {
-        $("#next-li")[0].classList.add('disabled');
+        $("#next-li")[0].classList.remove('disabled');
     } else if (currentPage == 1) {
-        $("#prev-li")[0].classList.add('disabled');
+        $("#prev-li")[0].classList.remove('disabled');
     }
 }
+
 const totalPages = Math.ceil(subsList.length / itemsPerPage);
 
 const displayData = () =>{
@@ -129,7 +118,6 @@ fetch(apiURL, getOptions)
         // Loop through the subscribers and add them to the local array
         for (let i = 0; i < numberOfSubs; i++) {
             subsList.push(new Subscribers(res.subscribers[i].phone_number, res.subscribers[i].email, res.subscribers[i].created_at, res.subscribers[i].tags));
-            console.log("subsList: " + subsList[i]);
         }
 
         updateTable();
