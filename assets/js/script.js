@@ -2,7 +2,79 @@ localStorage.clear();
 
 var apiURL = "https://api.postscript.io/api/v2/subscribers";
 
-const subscribers = [];
+class Subscribers {
+    constructor(phone_number, email, created_at, tags) {
+        this.phone_number = phone_number;
+        this.email = email;
+        this.created_at = created_at;
+        this.tags = tags;
+    }
+}
+const subsList = [];
+
+const itemsPerPage = 5;
+let currentPage = 1;
+const startIndex = (currentPage - 1) * itemsPerPage;
+const endIndex = startIndex + itemsPerPage;
+const paginatedItems = subsList.slice(startIndex, endIndex);
+const pageNumbers = [];
+const pageList = document.querySelector('.pagination');
+//const pageCount = Math.ceil(subsList.length / itemsPerPage);
+const pageCount = 5;
+console.log ("pageCount: " + pageCount);
+
+const prevPage = () => {
+    if (currentPage > 1) {
+        currentPage--;
+        updateTable();
+    }
+}
+const nextPage = () => {
+    console.log("in nextPage");
+    if (currentPage < pageCount) {
+        currentPage++;
+        updateTable();
+    }
+}
+const updateTable = () => {
+    console.log("in updateTable");
+    const tableBody = document.querySelector('tbody');
+    tableBody.innerHTML = '';
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    const endIndex = startIndex + itemsPerPage;
+    const paginatedItems = subsList.slice(startIndex, endIndex);
+    paginatedItems.forEach(item => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+            <th scope="row" class="phoneNum">${item.phone_number}</th>
+            <td>${item.email}</td>
+            <td>${moment(item.created_at).format('MM/DD/YYYY')}</td>
+            <td>${item.tags.join(', ')}</td>
+            <td><input type="text" class="form-control" placeholder="Add Tag"></td>
+            <td><button class="btn btn-primary">Submit</button></td>
+        `;
+        tableBody.appendChild(row);
+    });
+}
+const totalPages = Math.ceil(subsList.length / itemsPerPage);
+
+function displayData() {
+    const tableBody = document.querySelector('tbody');
+    tableBody.innerHTML = '';
+    for (let i = startIndex; i < endIndex && i < subsList.length; i++) {
+        console.log("subsList: " + subsList[i]);
+        const row = document.createElement('tr');
+        row.innerHTML = `
+            <th scope="row" class="phoneNum">${subsList[i].phone_number}</th>
+            <td>${subsList[i].email}</td>
+            <td>${moment(subsList[i].created_at).format('MM/DD/YYYY')}</td>
+            <td>${subsList[i].tags.join(', ')}</td>
+            <td><input type="text" class="form-control" placeholder="Add Tag"></td>
+            <td><button class="btn btn-primary">Submit</button></td>
+        `;
+        tableBody.appendChild(row);
+    }
+}
 
 const getOptions = {
     method: 'GET',
@@ -17,9 +89,17 @@ fetch(apiURL, getOptions)
     .then(function(res) {
         let numberOfSubs = res.subscribers.length;
         const tableBody = document.querySelector('tbody');
+        
+        // Loop through the subscribers and add them to the local array
+        for (let i = 0; i < numberOfSubs; i++) {
+            subsList.push(new Subscribers(res.subscribers[i].phone_number, res.subscribers[i].email, res.subscribers[i].created_at, res.subscribers[i].tags));
+            console.log("subsList: " + subsList[i]);
+        }
+
+        updateTable();
 
         // Loop through the subscribers and log their details
-        for (let i = 0; i < numberOfSubs; i++) {
+        /*for (let i = 0; i < numberOfSubs; i++) {
             const row = document.createElement('tr');
             row.innerHTML = `
                 <th scope="row" class="phoneNum">${res.subscribers[i].phone_number}</th>
@@ -30,7 +110,7 @@ fetch(apiURL, getOptions)
                 <td><button class="btn btn-primary">Submit</button></td>
             `;
             tableBody.appendChild(row);
-        }
+        }*/
     })
 
 
@@ -76,4 +156,14 @@ $(document).on('click', 'button', function() {
             }
     })
         .catch(err => console.error(err));
+});
+
+$("a[id*='prev-page']").click(function() {
+    prevPage();
+    console.log("prev-page");
+});
+
+$("a[id*='next-page']").click(function() {
+    nextPage();
+    console.log("next-page");
 });
