@@ -16,5 +16,12 @@ I built a simple web app that uses the following Postscript endpoints:
 
 2. Include a text input and submit button for each subscriber row to add a new tag via the _Update Subscriber_ endpoint.
 
+## Tech Stack Used
+- HTML
+- CSS
+- JavaScript
+- Bootstrap
+- jQuery
+
 ## Application Link
 https://owaisislam.github.io/Postscript-THA/
