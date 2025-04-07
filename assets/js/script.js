@@ -1,7 +1,5 @@
 localStorage.clear();
 
-var apiURL = "https://api.postscript.io/api/v2/subscribers";
-
 class Subscribers {
     constructor(phone_number, email, created_at, tags) {
         this.phone_number = phone_number;
@@ -12,8 +10,11 @@ class Subscribers {
 }
 const subsList = [];
 
-const itemsPerPage = 5;
+
+// Pagination Variables & Functions
+
 let currentPage = 1;
+const itemsPerPage = 5;
 const startIndex = (currentPage - 1) * itemsPerPage;
 const endIndex = startIndex + itemsPerPage;
 const paginatedItems = subsList.slice(startIndex, endIndex);
@@ -21,7 +22,6 @@ const pageNumbers = [];
 const pageList = $(".pagination");
 
 const prevPage = () => {
-    const pageCount = Math.ceil(subsList.length / itemsPerPage);
 
     checkPage();
     
@@ -29,6 +29,11 @@ const prevPage = () => {
         $("#prev-li")[0].classList.remove('disabled');
         currentPage--;
         updateTable();
+
+        if (currentPage == 1) {
+            $("#prev-li")[0].classList.add('disabled');
+        }
+
     } else {
         $("#prev-li")[0].classList.add('disabled');
     }
@@ -42,6 +47,11 @@ const nextPage = () => {
     if (currentPage < pageCount) {
         currentPage++;
         updateTable();
+
+        if (currentPage == pageCount) {
+            $("#next-li")[0].classList.add('disabled');
+        }
+
     } else {
         $("#next-li")[0].classList.add('disabled');
     }
@@ -72,6 +82,7 @@ const updateTable = () => {
 
 const checkPage = () => {
     const pageCount = Math.ceil(subsList.length / itemsPerPage);
+
     if (currentPage == pageCount) {
         $("#next-li")[0].classList.remove('disabled');
     } else if (currentPage == 1) {
@@ -81,23 +92,10 @@ const checkPage = () => {
 
 const totalPages = Math.ceil(subsList.length / itemsPerPage);
 
-const displayData = () =>{
-    const tableBody = document.querySelector('tbody');
-    tableBody.innerHTML = '';
-    for (let i = startIndex; i < endIndex && i < subsList.length; i++) {
-        console.log("subsList: " + subsList[i]);
-        const row = document.createElement('tr');
-        row.innerHTML = `
-            <th scope="row" class="phoneNum">${subsList[i].phone_number}</th>
-            <td>${subsList[i].email}</td>
-            <td>${moment(subsList[i].created_at).format('MM/DD/YYYY')}</td>
-            <td>${subsList[i].tags.join(', ')}</td>
-            <td><input type="text" class="form-control" placeholder="Add Tag"></td>
-            <td><button class="btn btn-primary">Submit</button></td>
-        `;
-        tableBody.appendChild(row);
-    }
-}
+
+// Initial API Call
+
+var apiURL = "https://api.postscript.io/api/v2/subscribers";
 
 const getOptions = {
     method: 'GET',
@@ -122,7 +120,8 @@ fetch(apiURL, getOptions)
     })
 
 
-// Add event listener to the button to handle click event
+// Event Handlers
+
 $(document).on('click', 'button', function() {
 
     let row = $(this).closest('tr');
@@ -168,10 +167,8 @@ $(document).on('click', 'button', function() {
 
 $("a[id~='prev-page']").click(function() {
     prevPage();
-    console.log("prev-page");
 });
 
 $("a[id~='next-page']").click(function() {
     nextPage();
-    console.log("next-page");
 });
