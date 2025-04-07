@@ -26,16 +26,16 @@ const prevPage = () => {
     checkPage();
     
     if (currentPage > 1) {
-        $("#prev-li")[0].classList.remove('disabled');
+        $("#prev-li")[0].classList.remove("disabled");
         currentPage--;
         updateTable();
 
         if (currentPage == 1) {
-            $("#prev-li")[0].classList.add('disabled');
+            $("#prev-li")[0].classList.add("disabled");
         }
 
     } else {
-        $("#prev-li")[0].classList.add('disabled');
+        $("#prev-li")[0].classList.add("disabled");
     }
 }
 
@@ -49,48 +49,46 @@ const nextPage = () => {
         updateTable();
 
         if (currentPage == pageCount) {
-            $("#next-li")[0].classList.add('disabled');
+            $("#next-li")[0].classList.add("disabled");
         }
 
     } else {
-        $("#next-li")[0].classList.add('disabled');
+        $("#next-li")[0].classList.add("disabled");
     }
 }
 
 const updateTable = () => {
     const pageCount = Math.ceil(subsList.length / itemsPerPage);
-    const tableBody = document.querySelector('tbody');
-    tableBody.innerHTML = '';
+    const tableBody = document.querySelector("tbody");
+    tableBody.innerHTML = "";
     const startIndex = (currentPage - 1) * itemsPerPage;
     const endIndex = startIndex + itemsPerPage;
     const paginatedItems = subsList.slice(startIndex, endIndex);
     paginatedItems.forEach(item => {
-        const row = document.createElement('tr');
+        const row = document.createElement("tr");
         row.innerHTML = `
             <th scope="row" class="phoneNum">${item.phone_number}</th>
             <td>${item.email}</td>
-            <td>${moment(item.created_at).format('MM/DD/YYYY')}</td>
-            <td>${item.tags.join(', ')}</td>
+            <td>${moment(item.created_at).format("MM/DD/YYYY")}</td>
+            <td>${item.tags.join(", ")}</td>
             <td><input type="text" class="form-control" placeholder="Add Tag"></td>
             <td><button class="btn btn-primary">Submit</button></td>
         `;
         tableBody.appendChild(row);
     });
 
-    $('#current-page').text("On Page " + currentPage + " of " + pageCount);
+    $("#current-page").text("On Page " + currentPage + " of " + pageCount);
 }
 
 const checkPage = () => {
     const pageCount = Math.ceil(subsList.length / itemsPerPage);
 
     if (currentPage == pageCount) {
-        $("#next-li")[0].classList.remove('disabled');
+        $("#next-li")[0].classList.remove("disabled");
     } else if (currentPage == 1) {
-        $("#prev-li")[0].classList.remove('disabled');
+        $("#prev-li")[0].classList.remove("disabled");
     }
 }
-
-const totalPages = Math.ceil(subsList.length / itemsPerPage);
 
 
 // Initial API Call
@@ -98,10 +96,10 @@ const totalPages = Math.ceil(subsList.length / itemsPerPage);
 var apiURL = "https://api.postscript.io/api/v2/subscribers";
 
 const getOptions = {
-    method: 'GET',
+    method: "GET",
     headers: {
-        accept: 'application/json',
-        Authorization: 'Bearer sk_6cd914fbb2c682a0626e85de06faed40'
+        accept: "application/json",
+        Authorization: "Bearer sk_6cd914fbb2c682a0626e85de06faed40"
     }
 };
 
@@ -109,7 +107,7 @@ fetch(apiURL, getOptions)
     .then(res => res.json())
     .then(function(res) {
         let numberOfSubs = res.subscribers.length;
-        const tableBody = document.querySelector('tbody');
+        const tableBody = document.querySelector("tbody");
         
         // Loop through the subscribers and add them to the local array
         for (let i = 0; i < numberOfSubs; i++) {
@@ -122,9 +120,9 @@ fetch(apiURL, getOptions)
 
 // Event Handlers
 
-$(document).on('click', 'button', function() {
+$(document).on("click", "button", function() {
 
-    let row = $(this).closest('tr');
+    let row = $(this).closest("tr");
     let input = row.find('input[type="text"]');
     let tag = input.val();
     let subID = "";
@@ -134,19 +132,19 @@ $(document).on('click', 'button', function() {
         .then(function(res) {
             for (let i = 0; i < res.subscribers.length; i++) {
 
-                if (res.subscribers[i].phone_number == row.find('.phoneNum').text()) {
+                if (res.subscribers[i].phone_number == row.find(".phoneNum").text()) {
                     subID = res.subscribers[i].id;
 
                     const patchOptions = {
-                        method: 'PATCH',
+                        method: "PATCH",
                         headers: {
-                            accept: 'application/json',
-                            'content-type': 'application/json',
-                            Authorization: 'Bearer sk_6cd914fbb2c682a0626e85de06faed40'
+                            accept: "application/json",
+                            "content-type": "application/json",
+                            Authorization: "Bearer sk_6cd914fbb2c682a0626e85de06faed40"
                         },
                         body: JSON.stringify({
                             properties: {
-                                key: 'value'},
+                                key: "value"},
                                 tags: [tag]
                             })
                     };
